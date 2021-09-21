@@ -4,8 +4,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const path = require('path');
 
-const Sauce = require('./models/sauce');
+const saucesRoutes = require('./routes/sauces');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -28,85 +30,9 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
-// app.post('/api/auth/signup', (req, res, next) => {
-//   console.log(req.body);
-//   res.status(201).json({
-//     message: 'User created successfully!'
-//   });
-// });
-
-
-// const sauceSchema = mongoose.Schema({  
-//   userId: { type: String, required: true },
-//   name: { type: String, required: true },
-//   manufacturer: { type: String, required: true },
-//   description: { type: String, required: true },
-//   mainPepper: { type: String, required: true },
-//   imageUrl: { type: String, required: true },
-//   heat: { type: Number, required: true },
-//   likes: { type: Number, required: true },
-//   dislikes: { type: Number, required: true },
-//   usersLiked: { type: Array, required: true },
-//   usersDisliked: { type: Array, required: true }
-// });
-
-app.post('/api/sauces', (req, res, next) => {
-  const sauce = new Sauce({
-    userId: req.body.userId,
-    name: req.body.name,
-    manufacturer: req.body.manufacturer,
-    description: req.body.description,
-    mainPepper: req.body.mainPepper,
-    imageUrl: req.body.imageUrl,
-    heat: req.body.heat,
-    likes: req.body.likes,
-    dislikes: req.body.dislikes,
-    usersLiked: req.body.usersLiked,
-    usersDisliked: req.body.usersDisliked
-  });
-  sauce.save().then(
-    () => {
-      res.status(201).json({
-        message: 'Post saved successfully!'
-      })
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );
-});
-
-
-app.use('/api/sauces', (req, res, next) => {
-  const stuff = [
-    {
-      _id: 'oeihfzeoi',
-      userId: 'req.body.userId',
-      name: 'req.body.name',
-      manufacturer: 'req.body.manufacturer',
-      description: 'req.body.description',
-      mainPepper: 'req.body.mainPepper',
-      imageUrl: 'req.body.imageUrl',
-      heat: 'req.body.heat',
-      likes: 'req.body.likes',
-      dislikes: 'req.body.dislikes',
-      usersLiked: 'req.body.usersLiked',
-      usersDisliked: 'req.body.usersDisliked'
-    },
-    {
-      _id: 'someRandomId',
-      title: 'My second thing',
-      description: 'All of the info about my second thing',
-      imageUrl: '',
-      price: 2900,
-      userId: 'qsomihvqios',
-    },
-  ];
-  res.status(200).json(stuff);
-});
+app.use('/api/sauces', saucesRoutes);
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
