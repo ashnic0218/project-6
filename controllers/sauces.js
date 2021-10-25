@@ -52,7 +52,7 @@ exports.getOneSauce = (req, res, next) => {
 
 exports.modifySauce = (req, res, next) => {
     let sauce = new Sauce({ _id: req.params._id });
-    const filename = ''
+    
     if (req.file) {
         const url = req.protocol + '://' + req.get('host');
         req.body.sauce = JSON.parse(req.body.sauce);
@@ -70,11 +70,6 @@ exports.modifySauce = (req, res, next) => {
             // usersLiked: req.body.sauce.usersLiked,
             // usersDisliked: req.body.sauce.usersDisliked
         };
-        filename = sauce.imageUrl.split('/images/')[1];
-        if (filename !== req.file.filename)
-            fs.unlink('images/' + filename, () => {
-                console.log('updated image')
-            })
     } else {
         sauce = {
             _id: req.params.id,
