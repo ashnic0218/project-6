@@ -54,6 +54,16 @@ exports.modifySauce = (req, res, next) => {
     let sauce = new Sauce({ _id: req.params._id });
     
     if (req.file) {
+        Sauce.findOne({
+            _id: req.params.id
+        }).then((data) => {
+            console.log(data)
+            const originalFilename = data.imageUrl.split('/images/')[1]
+            fs.unlink('images/' + originalFilename, () => {
+                console.log('Removed old image')
+            })
+        })
+            
         const url = req.protocol + '://' + req.get('host');
         req.body.sauce = JSON.parse(req.body.sauce);
         sauce = {
@@ -65,12 +75,9 @@ exports.modifySauce = (req, res, next) => {
             mainPepper: req.body.sauce.mainPepper,
             imageUrl: url + '/images/' + req.file.filename,
             heat: req.body.sauce.heat,
-            // likes: req.body.sauce.likes,
-            // dislikes: req.body.sauce.dislikes,
-            // usersLiked: req.body.sauce.usersLiked,
-            // usersDisliked: req.body.sauce.usersDisliked
         };
     } else {
+        
         sauce = {
             _id: req.params.id,
             userId: req.body.userId,
@@ -80,10 +87,6 @@ exports.modifySauce = (req, res, next) => {
             mainPepper: req.body.mainPepper,
             imageUrl: req.body.imageUrl,
             heat: req.body.heat,
-            // likes: req.body.likes,
-            // dislikes: req.body.dislikes,
-            // usersLiked: req.body.usersLiked,
-            // usersDisliked: req.body.usersDisliked
         };
     }
     Sauce.updateOne({_id: req.params.id}, sauce).then(
@@ -180,7 +183,7 @@ exports.getRating = (req, res, next) => {
                         sauceUpdate.likes -= 1
                         const userIndex = sauceUpdate.usersLiked.findIndex(user => user === req.body.userId)
                         sauceUpdate.usersLiked.splice(userIndex, 1)
-                        console.log({'0 from like': sauceUpdate})
+                        console.log({'from like to 0': sauceUpdate})
                     }
 
                     
@@ -191,7 +194,7 @@ exports.getRating = (req, res, next) => {
                         sauceUpdate.dislikes -= 1
                         const userIndex = sauceUpdate.usersDisliked.findIndex(user => req.body.userId === user)
                         sauceUpdate.usersDisliked.splice(userIndex, 1)
-                        console.log({'0 from dislike': sauceUpdate})
+                        console.log({'from dislike to 0': sauceUpdate})
                     }
                 }
 
