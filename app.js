@@ -5,13 +5,18 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
+const dotenv = require("dotenv")
 
 const saucesRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
 
 const app = express();
 
-mongoose.connect('mongodb+srv://kris-v:pKgF9ci7ofKBIkaq@cluster0.8bnnq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
+dotenv.config()
+
+const connectionString = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.8bnnq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+
+mongoose.connect(connectionString)
   .then(() => {
     console.log('Successfully connected to MongoDB Atlas!');
   })
