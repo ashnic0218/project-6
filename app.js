@@ -1,5 +1,3 @@
-// MONGODB PW: pKgF9ci7ofKBIkaq
-// MONGODB CONNECTION: mongodb+srv://kris-v:<password>@cluster0.8bnnq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 
 const express = require('express');
 const bodyParser = require('body-parser');
